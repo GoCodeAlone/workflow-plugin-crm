@@ -56,16 +56,17 @@ type BulkResult struct {
 
 // ProviderConfig holds authentication and connection settings.
 type ProviderConfig struct {
-	Provider     string // "salesforce"
-	AuthType     string
-	ClientID     string
-	ClientSecret string
-	RefreshToken string
-	Username     string
-	Password     string
-	AccessToken  string
-	InstanceURL  string
-	APIVersion   string
-	Sandbox      bool
-	LoginURL     string
+	Provider      string // "salesforce"
+	AuthType      string
+	ClientID      string
+	ClientSecret  string
+	RefreshToken  string
+	Username      string
+	Password      string
+	SecurityToken string
+	AccessToken   string
+	InstanceURL   string
+	APIVersion    string
+	Sandbox       bool
+	LoginURL      string
 }

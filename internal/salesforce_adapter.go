@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -48,17 +49,18 @@ func (a *salesforceAdapter) Connect(ctx context.Context, cfg ProviderConfig) err
 
 	// Delegate authentication to the salesforce plugin's provider.
 	sfCfg := sfprovider.Config{
-		AuthType:     cfg.AuthType,
-		ClientID:     cfg.ClientID,
-		ClientSecret: cfg.ClientSecret,
-		RefreshToken: cfg.RefreshToken,
-		Username:     cfg.Username,
-		Password:     cfg.Password,
-		AccessToken:  cfg.AccessToken,
-		InstanceURL:  cfg.InstanceURL,
-		LoginURL:     cfg.LoginURL,
-		APIVersion:   cfg.APIVersion,
-		Sandbox:      cfg.Sandbox,
+		AuthType:      cfg.AuthType,
+		ClientID:      cfg.ClientID,
+		ClientSecret:  cfg.ClientSecret,
+		RefreshToken:  cfg.RefreshToken,
+		Username:      cfg.Username,
+		Password:      cfg.Password,
+		SecurityToken: cfg.SecurityToken,
+		AccessToken:   cfg.AccessToken,
+		InstanceURL:   cfg.InstanceURL,
+		LoginURL:      cfg.LoginURL,
+		APIVersion:    cfg.APIVersion,
+		Sandbox:       cfg.Sandbox,
 	}
 
 	provider, err := sfprovider.NewProvider(ctx, sfCfg)
@@ -127,9 +129,8 @@ func (a *salesforceAdapter) doJSON(ctx context.Context, method, fullURL string, 
 	return result, nil
 }
 
-func (a *salesforceAdapter) CreateRecord(_ context.Context, objectType string, fields map[string]any) (*RecordResult, error) {
-	ctx := context.Background()
-	u := a.versionedURL(fmt.Sprintf("/sobjects/%s", objectType))
+func (a *salesforceAdapter) CreateRecord(ctx context.Context, objectType string, fields map[string]any) (*RecordResult, error) {
+	u := a.versionedURL(fmt.Sprintf("/sobjects/%s", url.PathEscape(objectType)))
 	result, err := a.doJSON(ctx, http.MethodPost, u, fields)
 	if err != nil {
 		return nil, err
@@ -146,22 +147,19 @@ func (a *salesforceAdapter) CreateRecord(_ context.Context, objectType string, f
 	return rr, nil
 }
 
-func (a *salesforceAdapter) GetRecord(_ context.Context, objectType, id string) (map[string]any, error) {
-	ctx := context.Background()
-	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s", objectType, id))
+func (a *salesforceAdapter) GetRecord(ctx context.Context, objectType, id string) (map[string]any, error) {
+	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s", url.PathEscape(objectType), url.PathEscape(id)))
 	return a.doJSON(ctx, http.MethodGet, u, nil)
 }
 
-func (a *salesforceAdapter) UpdateRecord(_ context.Context, objectType, id string, fields map[string]any) error {
-	ctx := context.Background()
-	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s", objectType, id))
+func (a *salesforceAdapter) UpdateRecord(ctx context.Context, objectType, id string, fields map[string]any) error {
+	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s", url.PathEscape(objectType), url.PathEscape(id)))
 	_, err := a.doJSON(ctx, http.MethodPatch, u, fields)
 	return err
 }
 
-func (a *salesforceAdapter) UpsertRecord(_ context.Context, objectType, extField, extValue string, fields map[string]any) (*RecordResult, error) {
-	ctx := context.Background()
-	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s/%s", objectType, extField, extValue))
+func (a *salesforceAdapter) UpsertRecord(ctx context.Context, objectType, extField, extValue string, fields map[string]any) (*RecordResult, error) {
+	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s/%s", url.PathEscape(objectType), url.PathEscape(extField), url.PathEscape(extValue)))
 	result, err := a.doJSON(ctx, http.MethodPatch, u, fields)
 	if err != nil {
 		return nil, err
@@ -173,15 +171,13 @@ func (a *salesforceAdapter) UpsertRecord(_ context.Context, objectType, extField
 	return rr, nil
 }
 
-func (a *salesforceAdapter) DeleteRecord(_ context.Context, objectType, id string) error {
-	ctx := context.Background()
-	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s", objectType, id))
+func (a *salesforceAdapter) DeleteRecord(ctx context.Context, objectType, id string) error {
+	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/%s", url.PathEscape(objectType), url.PathEscape(id)))
 	_, err := a.doJSON(ctx, http.MethodDelete, u, nil)
 	return err
 }
 
-func (a *salesforceAdapter) Query(_ context.Context, query string) (*QueryResult, error) {
-	ctx := context.Background()
+func (a *salesforceAdapter) Query(ctx context.Context, query string) (*QueryResult, error) {
 	u := a.versionedURL("/query?q=" + url.QueryEscape(query))
 	result, err := a.doJSON(ctx, http.MethodGet, u, nil)
 	if err != nil {
@@ -204,8 +200,7 @@ func (a *salesforceAdapter) Query(_ context.Context, query string) (*QueryResult
 	return qr, nil
 }
 
-func (a *salesforceAdapter) Search(_ context.Context, query string) (*SearchResult, error) {
-	ctx := context.Background()
+func (a *salesforceAdapter) Search(ctx context.Context, query string) (*SearchResult, error) {
 	u := a.versionedURL("/search?q=" + url.QueryEscape(query))
 	result, err := a.doJSON(ctx, http.MethodGet, u, nil)
 	if err != nil {
@@ -228,19 +223,57 @@ func (a *salesforceAdapter) Search(_ context.Context, query string) (*SearchResu
 	return sr, nil
 }
 
-func (a *salesforceAdapter) BulkOperation(_ context.Context, op BulkOp) (*BulkResult, error) {
-	ctx := context.Background()
+func (a *salesforceAdapter) BulkOperation(ctx context.Context, op BulkOp) (*BulkResult, error) {
+	if len(op.Records) == 0 {
+		return nil, fmt.Errorf("crm/salesforce: bulk operation requires at least one record")
+	}
+
+	// 1. Create the Bulk API v2 ingest job.
 	body := map[string]any{
-		"object":    op.ObjectType,
-		"operation": op.Operation,
+		"object":              op.ObjectType,
+		"operation":           op.Operation,
+		"contentType":         "CSV",
+		"lineEnding":          "LF",
+		"columnDelimiter":     "COMMA",
 	}
 	u := a.versionedURL("/jobs/ingest")
 	result, err := a.doJSON(ctx, http.MethodPost, u, body)
 	if err != nil {
 		return nil, err
 	}
+	jobID := fmt.Sprintf("%v", result["id"])
+
+	// 2. Serialize records to CSV and upload.
+	csvData, err := recordsToCSV(op.Records)
+	if err != nil {
+		return nil, fmt.Errorf("crm/salesforce: csv encode: %w", err)
+	}
+
+	batchURL := a.versionedURL(fmt.Sprintf("/jobs/ingest/%s/batches", url.PathEscape(jobID)))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, batchURL, bytes.NewReader(csvData))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+a.accessToken)
+	req.Header.Set("Content-Type", "text/csv")
+	resp, err := a.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("crm/salesforce: upload csv: %w", err)
+	}
+	resp.Body.Close()
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("crm/salesforce: upload csv: HTTP %d", resp.StatusCode)
+	}
+
+	// 3. Close the job by setting state to UploadComplete.
+	closeURL := a.versionedURL(fmt.Sprintf("/jobs/ingest/%s", url.PathEscape(jobID)))
+	result, err = a.doJSON(ctx, http.MethodPatch, closeURL, map[string]any{"state": "UploadComplete"})
+	if err != nil {
+		return nil, err
+	}
+
 	br := &BulkResult{
-		JobID: fmt.Sprintf("%v", result["id"]),
+		JobID: jobID,
 		State: fmt.Sprintf("%v", result["state"]),
 	}
 	if rp, ok := result["numberRecordsProcessed"].(float64); ok {
@@ -252,14 +285,54 @@ func (a *salesforceAdapter) BulkOperation(_ context.Context, op BulkOp) (*BulkRe
 	return br, nil
 }
 
-func (a *salesforceAdapter) DescribeObject(_ context.Context, objectType string) (map[string]any, error) {
-	ctx := context.Background()
-	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/describe", objectType))
+// recordsToCSV converts a slice of record maps to CSV bytes. Column order
+// is derived from the first record; missing values become empty strings.
+func recordsToCSV(records []map[string]any) ([]byte, error) {
+	if len(records) == 0 {
+		return nil, fmt.Errorf("no records")
+	}
+	// Stable column list from first record.
+	var cols []string
+	for k := range records[0] {
+		cols = append(cols, k)
+	}
+
+	var buf bytes.Buffer
+	// Header row.
+	for i, c := range cols {
+		if i > 0 {
+			buf.WriteByte(',')
+		}
+		buf.WriteString(csvEscape(c))
+	}
+	buf.WriteByte('\n')
+	// Data rows.
+	for _, rec := range records {
+		for i, c := range cols {
+			if i > 0 {
+				buf.WriteByte(',')
+			}
+			buf.WriteString(csvEscape(fmt.Sprintf("%v", rec[c])))
+		}
+		buf.WriteByte('\n')
+	}
+	return buf.Bytes(), nil
+}
+
+// csvEscape wraps a value in double-quotes if it contains comma, quote, or newline.
+func csvEscape(s string) string {
+	if strings.ContainsAny(s, ",\"\n\r") {
+		return `"` + strings.ReplaceAll(s, `"`, `""`) + `"`
+	}
+	return s
+}
+
+func (a *salesforceAdapter) DescribeObject(ctx context.Context, objectType string) (map[string]any, error) {
+	u := a.versionedURL(fmt.Sprintf("/sobjects/%s/describe", url.PathEscape(objectType)))
 	return a.doJSON(ctx, http.MethodGet, u, nil)
 }
 
-func (a *salesforceAdapter) GetLimits(_ context.Context) (map[string]any, error) {
-	ctx := context.Background()
+func (a *salesforceAdapter) GetLimits(ctx context.Context) (map[string]any, error) {
 	u := a.versionedURL("/limits")
 	return a.doJSON(ctx, http.MethodGet, u, nil)
 }

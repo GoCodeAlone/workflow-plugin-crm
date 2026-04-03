@@ -31,18 +31,19 @@ func (m *crmModule) Init() error {
 	}
 
 	cfg := ProviderConfig{
-		Provider:     providerType,
-		AuthType:     strCfg(m.config, "authType"),
-		ClientID:     strCfg(m.config, "clientId"),
-		ClientSecret: strCfg(m.config, "clientSecret"),
-		RefreshToken: strCfg(m.config, "refreshToken"),
-		Username:     strCfg(m.config, "username"),
-		Password:     strCfg(m.config, "password"),
-		AccessToken:  strCfg(m.config, "accessToken"),
-		InstanceURL:  strCfg(m.config, "instanceUrl"),
-		APIVersion:   strCfg(m.config, "apiVersion"),
-		LoginURL:     strCfg(m.config, "loginUrl"),
-		Sandbox:      boolCfg(m.config, "sandbox"),
+		Provider:      providerType,
+		AuthType:      strCfg(m.config, "authType"),
+		ClientID:      strCfg(m.config, "clientId"),
+		ClientSecret:  strCfg(m.config, "clientSecret"),
+		RefreshToken:  strCfg(m.config, "refreshToken"),
+		Username:      strCfg(m.config, "username"),
+		Password:      strCfg(m.config, "password"),
+		SecurityToken: strCfg(m.config, "security_token"),
+		AccessToken:   strCfg(m.config, "accessToken"),
+		InstanceURL:   strCfg(m.config, "instanceUrl"),
+		APIVersion:    strCfg(m.config, "apiVersion"),
+		LoginURL:      strCfg(m.config, "loginUrl"),
+		Sandbox:       boolCfg(m.config, "sandbox"),
 	}
 
 	if err := provider.Connect(context.Background(), cfg); err != nil {
