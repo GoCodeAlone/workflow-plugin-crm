@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/GoCodeAlone/workflow v0.3.56
-	github.com/GoCodeAlone/workflow-plugin-salesforce v0.0.0
+	github.com/GoCodeAlone/workflow-plugin-salesforce v0.2.0
 )
 
 require (
@@ -190,5 +190,3 @@ require (
 	modernc.org/memory v1.11.0 // indirect
 	modernc.org/sqlite v1.45.0 // indirect
 )
-
-replace github.com/GoCodeAlone/workflow-plugin-salesforce => ../workflow-plugin-salesforce
