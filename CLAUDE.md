@@ -1,6 +1,6 @@
-# CLAUDE.md — Workflow Plugin Template
+# CLAUDE.md — Workflow Plugin CRM
 
-External gRPC plugin for the GoCodeAlone/workflow engine.
+Vendor-neutral CRM plugin for the GoCodeAlone/workflow engine. Salesforce adapter wraps `workflow-plugin-salesforce`'s exported provider.
 
 ## Build & Test
 
@@ -12,32 +12,24 @@ go test ./... -v -race -count=1
 ## Cross-compile for deployment
 
 ```sh
-GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w" -o workflow-plugin-TEMPLATE ./cmd/workflow-plugin-TEMPLATE/
+GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w" -o workflow-plugin-crm ./cmd/workflow-plugin-crm/
 ```
 
 ## Structure
 
-- `cmd/workflow-plugin-TEMPLATE/main.go` — Plugin entry point (calls `sdk.Serve`)
-- `internal/plugin.go` — Plugin manifest, module factories, step factories
-- `internal/` — All module and step implementations
+- `cmd/workflow-plugin-crm/main.go` — Plugin entry point (calls `sdk.Serve`)
+- `internal/plugin.go` — Plugin manifest, module/step providers
+- `internal/crm.go` — Vendor-neutral CRMProvider interface
+- `internal/salesforce_adapter.go` — Salesforce implementation of CRMProvider
+- `internal/module_provider.go` — crm.provider module (lifecycle + registry)
+- `internal/registry.go` — Global provider registry
+- `internal/step_record.go` — CRUD step types (create/get/update/upsert/delete)
+- `internal/step_query.go` — Query and search step types
+- `internal/step_ops.go` — Bulk import, describe object, get limits steps
+- `internal/helpers.go` — Parameter resolution helpers
+- `internal/step_registry.go` — Step type → constructor dispatch
 - `plugin.json` — Capability manifest for the workflow registry
 - `.goreleaser.yaml` — GoReleaser v2 config for cross-platform releases
-- `.github/workflows/ci.yml` — CI on push/PR (build + test)
-- `.github/workflows/release.yml` — Release on v* tag push (GoReleaser)
-
-## Adding a Module Type
-
-1. Create `internal/module_example.go` implementing the module
-2. Register in `internal/plugin.go` ModuleFactories()
-3. Add to `plugin.json` capabilities.moduleTypes
-4. Add tests in `internal/module_example_test.go`
-
-## Adding a Step Type
-
-1. Create `internal/step_example.go` implementing the step
-2. Register in `internal/plugin.go` StepFactories()
-3. Add to `plugin.json` capabilities.stepTypes
-4. Add tests in `internal/step_example_test.go`
 
 ## Releasing
 

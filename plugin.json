@@ -1,20 +1,31 @@
 {
-    "name": "workflow-plugin-TEMPLATE",
+    "name": "workflow-plugin-crm",
     "version": "0.1.0",
-    "description": "TEMPLATE plugin for the workflow engine",
+    "description": "Vendor-neutral CRM plugin for the workflow engine (Salesforce adapter)",
     "author": "GoCodeAlone",
     "license": "MIT",
     "type": "external",
     "tier": "community",
     "private": false,
     "minEngineVersion": "0.3.55",
-    "keywords": [],
-    "homepage": "https://github.com/GoCodeAlone/workflow-plugin-TEMPLATE",
-    "repository": "https://github.com/GoCodeAlone/workflow-plugin-TEMPLATE",
+    "keywords": ["crm", "salesforce"],
+    "homepage": "https://github.com/GoCodeAlone/workflow-plugin-crm",
+    "repository": "https://github.com/GoCodeAlone/workflow-plugin-crm",
     "capabilities": {
         "configProvider": false,
-        "moduleTypes": [],
-        "stepTypes": [],
+        "moduleTypes": ["crm.provider"],
+        "stepTypes": [
+            "step.crm_create_record",
+            "step.crm_get_record",
+            "step.crm_update_record",
+            "step.crm_upsert_record",
+            "step.crm_delete_record",
+            "step.crm_query",
+            "step.crm_search",
+            "step.crm_bulk_import",
+            "step.crm_describe_object",
+            "step.crm_get_limits"
+        ],
         "triggerTypes": []
     }
 }
