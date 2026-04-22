@@ -7,6 +7,10 @@ import (
 	sdk "github.com/GoCodeAlone/workflow/plugin/external/sdk"
 )
 
+// Version is set at build time via -ldflags
+// "-X github.com/GoCodeAlone/workflow-plugin-crm/internal.Version=X.Y.Z"
+var Version = "dev"
+
 // crmPlugin implements sdk.PluginProvider, sdk.ModuleProvider, and sdk.StepProvider.
 type crmPlugin struct{}
 
@@ -19,7 +23,7 @@ func NewCRMPlugin() sdk.PluginProvider {
 func (p *crmPlugin) Manifest() sdk.PluginManifest {
 	return sdk.PluginManifest{
 		Name:        "workflow-plugin-crm",
-		Version:     "0.1.0",
+		Version:     Version,
 		Author:      "GoCodeAlone",
 		Description: "Vendor-neutral CRM plugin with pluggable provider architecture (Salesforce adapter)",
 	}
