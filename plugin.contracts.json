@@ -1,0 +1,81 @@
+{
+    "version": "1",
+    "contracts": [
+        {
+            "kind": "module",
+            "type": "crm.provider",
+            "mode": "strict",
+            "config": "workflow.plugins.crm.CRMProviderConfig"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_bulk_import",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMBulkImportInput",
+            "output": "workflow.plugins.crm.CRMBulkImportOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_create_record",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMCreateRecordInput",
+            "output": "workflow.plugins.crm.CRMCreateRecordOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_delete_record",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMDeleteRecordInput",
+            "output": "workflow.plugins.crm.CRMDeleteRecordOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_describe_object",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMDescribeObjectInput",
+            "output": "workflow.plugins.crm.CRMDescribeObjectOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_get_limits",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMGetLimitsInput",
+            "output": "workflow.plugins.crm.CRMGetLimitsOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_get_record",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMGetRecordInput",
+            "output": "workflow.plugins.crm.CRMGetRecordOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_query",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMQueryInput",
+            "output": "workflow.plugins.crm.CRMQueryOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_search",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMSearchInput",
+            "output": "workflow.plugins.crm.CRMSearchOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_update_record",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMUpdateRecordInput",
+            "output": "workflow.plugins.crm.CRMUpdateRecordOutput"
+        },
+        {
+            "kind": "step",
+            "type": "step.crm_upsert_record",
+            "mode": "strict",
+            "input": "workflow.plugins.crm.CRMUpsertRecordInput",
+            "output": "workflow.plugins.crm.CRMUpsertRecordOutput"
+        }
+    ]
+}

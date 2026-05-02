@@ -87,7 +87,10 @@ func TestPlugin_ImplementsSchemaProvider(t *testing.T) {
 // are declared in the crm.provider module schema contract.
 func TestModuleSchema_CRMProviderFields(t *testing.T) {
 	p := internal.NewCRMPlugin()
-	sp := p.(sdk.SchemaProvider)
+	sp, ok := p.(sdk.SchemaProvider)
+	if !ok {
+		t.Fatal("plugin does not implement SchemaProvider")
+	}
 	var crmSchema *sdk.ModuleSchemaData
 	for _, s := range sp.ModuleSchemas() {
 		s := s
@@ -163,7 +166,7 @@ func TestPluginJSON_HasStepSchemas(t *testing.T) {
 }
 
 // TestPluginJSON_CanonicalFormat verifies that the plugin.json uses the canonical
-// manifest shape with top-level moduleTypes/stepTypes fields.
+// manifest shape with moduleTypes/stepTypes declared inside a top-level capabilities object.
 func TestPluginJSON_CanonicalFormat(t *testing.T) {
 	data, err := os.ReadFile("../plugin.json")
 	if err != nil {
@@ -171,16 +174,21 @@ func TestPluginJSON_CanonicalFormat(t *testing.T) {
 	}
 
 	var manifest struct {
-		ModuleTypes []string `json:"moduleTypes"`
-		StepTypes   []string `json:"stepTypes"`
+		Capabilities *struct {
+			ModuleTypes []string `json:"moduleTypes"`
+			StepTypes   []string `json:"stepTypes"`
+		} `json:"capabilities"`
 	}
 	if err := json.Unmarshal(data, &manifest); err != nil {
 		t.Fatalf("cannot parse plugin.json: %v", err)
 	}
-	if len(manifest.ModuleTypes) == 0 {
-		t.Error("plugin.json: moduleTypes should be declared at top level in canonical format")
+	if manifest.Capabilities == nil {
+		t.Fatal("plugin.json: top-level capabilities object is missing (canonical format required)")
 	}
-	if len(manifest.StepTypes) == 0 {
-		t.Error("plugin.json: stepTypes should be declared at top level in canonical format")
+	if len(manifest.Capabilities.ModuleTypes) == 0 {
+		t.Error("plugin.json: capabilities.moduleTypes is empty")
+	}
+	if len(manifest.Capabilities.StepTypes) == 0 {
+		t.Error("plugin.json: capabilities.stepTypes is empty")
 	}
 }
