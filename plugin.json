@@ -1,502 +1,502 @@
 {
-    "name": "workflow-plugin-crm",
-    "version": "0.1.2",
-    "description": "Vendor-neutral CRM plugin for the workflow engine (Salesforce adapter)",
-    "author": "GoCodeAlone",
-    "license": "MIT",
-    "type": "external",
-    "tier": "community",
-    "minEngineVersion": "0.51.7",
-    "keywords": [
-        "crm",
-        "salesforce"
+  "name": "workflow-plugin-crm",
+  "version": "0.1.3",
+  "description": "Vendor-neutral CRM plugin for the workflow engine (Salesforce adapter)",
+  "author": "GoCodeAlone",
+  "license": "MIT",
+  "type": "external",
+  "tier": "community",
+  "minEngineVersion": "0.51.7",
+  "keywords": [
+    "crm",
+    "salesforce"
+  ],
+  "homepage": "https://github.com/GoCodeAlone/workflow-plugin-crm",
+  "repository": "https://github.com/GoCodeAlone/workflow-plugin-crm",
+  "capabilities": {
+    "moduleTypes": [
+      "crm.provider"
     ],
-    "homepage": "https://github.com/GoCodeAlone/workflow-plugin-crm",
-    "repository": "https://github.com/GoCodeAlone/workflow-plugin-crm",
-    "capabilities": {
-        "moduleTypes": [
-            "crm.provider"
-        ],
-        "stepTypes": [
-            "step.crm_create_record",
-            "step.crm_get_record",
-            "step.crm_update_record",
-            "step.crm_upsert_record",
-            "step.crm_delete_record",
-            "step.crm_query",
-            "step.crm_search",
-            "step.crm_bulk_import",
-            "step.crm_describe_object",
-            "step.crm_get_limits"
-        ],
-        "triggerTypes": []
+    "stepTypes": [
+      "step.crm_create_record",
+      "step.crm_get_record",
+      "step.crm_update_record",
+      "step.crm_upsert_record",
+      "step.crm_delete_record",
+      "step.crm_query",
+      "step.crm_search",
+      "step.crm_bulk_import",
+      "step.crm_describe_object",
+      "step.crm_get_limits"
+    ],
+    "triggerTypes": []
+  },
+  "downloads": [
+    {
+      "os": "linux",
+      "arch": "amd64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-linux-amd64.tar.gz"
     },
-    "downloads": [
+    {
+      "os": "linux",
+      "arch": "arm64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-linux-arm64.tar.gz"
+    },
+    {
+      "os": "darwin",
+      "arch": "amd64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-darwin-amd64.tar.gz"
+    },
+    {
+      "os": "darwin",
+      "arch": "arm64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-darwin-arm64.tar.gz"
+    },
+    {
+      "os": "windows",
+      "arch": "amd64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-windows-amd64.tar.gz"
+    },
+    {
+      "os": "windows",
+      "arch": "arm64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-windows-arm64.tar.gz"
+    }
+  ],
+  "stepSchemas": [
+    {
+      "type": "step.crm_create_record",
+      "description": "Creates a new record in the CRM system for the given object type.",
+      "configFields": [
         {
-            "os": "linux",
-            "arch": "amd64",
-            "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-linux-amd64.tar.gz"
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
         },
         {
-            "os": "linux",
-            "arch": "arm64",
-            "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-linux-arm64.tar.gz"
+          "key": "object_type",
+          "label": "Object Type",
+          "type": "string",
+          "description": "CRM object type to create (e.g. Account, Contact, Lead).",
+          "required": true
         },
         {
-            "os": "darwin",
-            "arch": "amd64",
-            "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-darwin-amd64.tar.gz"
-        },
-        {
-            "os": "darwin",
-            "arch": "arm64",
-            "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-darwin-arm64.tar.gz"
-        },
-        {
-            "os": "windows",
-            "arch": "amd64",
-            "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-windows-amd64.tar.gz"
-        },
-        {
-            "os": "windows",
-            "arch": "arm64",
-            "url": "https://github.com/GoCodeAlone/workflow-plugin-crm/releases/download/v0.1.1/workflow-plugin-crm-windows-arm64.tar.gz"
+          "key": "fields",
+          "label": "Fields",
+          "type": "json",
+          "description": "Map of field names to values for the new record."
         }
-    ],
-    "stepSchemas": [
+      ],
+      "outputs": [
         {
-            "type": "step.crm_create_record",
-            "description": "Creates a new record in the CRM system for the given object type.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "object_type",
-                    "label": "Object Type",
-                    "type": "string",
-                    "description": "CRM object type to create (e.g. Account, Contact, Lead).",
-                    "required": true
-                },
-                {
-                    "key": "fields",
-                    "label": "Fields",
-                    "type": "json",
-                    "description": "Map of field names to values for the new record."
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "id",
-                    "type": "string",
-                    "description": "ID of the created record."
-                },
-                {
-                    "key": "success",
-                    "type": "boolean",
-                    "description": "Whether the record was created successfully."
-                },
-                {
-                    "key": "errors",
-                    "type": "array",
-                    "description": "List of error messages if the creation failed."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step encountered a fatal error."
-                }
-            ]
+          "key": "id",
+          "type": "string",
+          "description": "ID of the created record."
         },
         {
-            "type": "step.crm_get_record",
-            "description": "Retrieves a single CRM record by object type and record ID. On success the record's fields are returned as top-level output keys.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "object_type",
-                    "label": "Object Type",
-                    "type": "string",
-                    "description": "CRM object type to retrieve (e.g. Account, Contact).",
-                    "required": true
-                },
-                {
-                    "key": "record_id",
-                    "label": "Record ID",
-                    "type": "string",
-                    "description": "ID of the CRM record to retrieve.",
-                    "required": true
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "Id",
-                    "type": "string",
-                    "description": "CRM record ID (provider-standard field present on every record)."
-                },
-                {
-                    "key": "Name",
-                    "type": "string",
-                    "description": "CRM record name field (provider-standard field, present on most object types)."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed or the record was not found. Additional provider-specific record fields are returned as sibling output keys."
-                }
-            ]
+          "key": "success",
+          "type": "boolean",
+          "description": "Whether the record was created successfully."
         },
         {
-            "type": "step.crm_update_record",
-            "description": "Updates an existing CRM record with the provided field values.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "object_type",
-                    "label": "Object Type",
-                    "type": "string",
-                    "description": "CRM object type of the record to update.",
-                    "required": true
-                },
-                {
-                    "key": "record_id",
-                    "label": "Record ID",
-                    "type": "string",
-                    "description": "ID of the CRM record to update.",
-                    "required": true
-                },
-                {
-                    "key": "fields",
-                    "label": "Fields",
-                    "type": "json",
-                    "description": "Map of field names to updated values."
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "success",
-                    "type": "boolean",
-                    "description": "Whether the record was updated successfully."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed."
-                }
-            ]
+          "key": "errors",
+          "type": "array",
+          "description": "List of error messages if the creation failed."
         },
         {
-            "type": "step.crm_upsert_record",
-            "description": "Creates or updates a CRM record matched by an external ID field.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "object_type",
-                    "label": "Object Type",
-                    "type": "string",
-                    "description": "CRM object type to upsert.",
-                    "required": true
-                },
-                {
-                    "key": "external_id_field",
-                    "label": "External ID Field",
-                    "type": "string",
-                    "description": "API name of the external ID field used to match existing records.",
-                    "required": true
-                },
-                {
-                    "key": "external_id_value",
-                    "label": "External ID Value",
-                    "type": "string",
-                    "description": "Value of the external ID field used to match existing records.",
-                    "required": true
-                },
-                {
-                    "key": "fields",
-                    "label": "Fields",
-                    "type": "json",
-                    "description": "Map of field names to values to set on the record."
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "id",
-                    "type": "string",
-                    "description": "ID of the created or updated record."
-                },
-                {
-                    "key": "success",
-                    "type": "boolean",
-                    "description": "Whether the upsert was successful."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed."
-                }
-            ]
-        },
-        {
-            "type": "step.crm_delete_record",
-            "description": "Deletes a CRM record by object type and record ID.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "object_type",
-                    "label": "Object Type",
-                    "type": "string",
-                    "description": "CRM object type of the record to delete.",
-                    "required": true
-                },
-                {
-                    "key": "record_id",
-                    "label": "Record ID",
-                    "type": "string",
-                    "description": "ID of the CRM record to delete.",
-                    "required": true
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "success",
-                    "type": "boolean",
-                    "description": "Whether the record was deleted successfully."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed."
-                }
-            ]
-        },
-        {
-            "type": "step.crm_query",
-            "description": "Executes a structured query (e.g. SOQL for Salesforce) against the CRM and returns matching records.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "query",
-                    "label": "Query",
-                    "type": "string",
-                    "description": "Query string in the provider's query language (e.g. SOQL).",
-                    "required": true
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "records",
-                    "type": "array",
-                    "description": "List of records returned by the query."
-                },
-                {
-                    "key": "total_size",
-                    "type": "number",
-                    "description": "Total number of records matched by the query."
-                },
-                {
-                    "key": "done",
-                    "type": "boolean",
-                    "description": "Whether all matching records have been returned."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed."
-                }
-            ]
-        },
-        {
-            "type": "step.crm_search",
-            "description": "Executes a free-text search (e.g. SOSL for Salesforce) across CRM objects.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "query",
-                    "label": "Search Query",
-                    "type": "string",
-                    "description": "Search string in the provider's search language (e.g. SOSL FIND clause).",
-                    "required": true
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "results",
-                    "type": "array",
-                    "description": "List of records returned by the search."
-                },
-                {
-                    "key": "count",
-                    "type": "number",
-                    "description": "Number of records returned."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed."
-                }
-            ]
-        },
-        {
-            "type": "step.crm_bulk_import",
-            "description": "Performs a bulk CRM operation (insert, update, upsert, or delete) on a set of records.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "object_type",
-                    "label": "Object Type",
-                    "type": "string",
-                    "description": "CRM object type to operate on.",
-                    "required": true
-                },
-                {
-                    "key": "operation",
-                    "label": "Operation",
-                    "type": "string",
-                    "description": "Bulk operation type: insert, update, upsert, or delete.",
-                    "defaultValue": "insert"
-                },
-                {
-                    "key": "records",
-                    "label": "Records",
-                    "type": "json",
-                    "description": "Array of record field maps to process."
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "job_id",
-                    "type": "string",
-                    "description": "Provider job ID for the bulk operation."
-                },
-                {
-                    "key": "state",
-                    "type": "string",
-                    "description": "Current state of the bulk job."
-                },
-                {
-                    "key": "records_processed",
-                    "type": "number",
-                    "description": "Number of records successfully processed."
-                },
-                {
-                    "key": "records_failed",
-                    "type": "number",
-                    "description": "Number of records that failed to process."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed."
-                }
-            ]
-        },
-        {
-            "type": "step.crm_describe_object",
-            "description": "Returns metadata describing a CRM object type, including its fields and their properties. On success the provider's describe payload is returned as top-level output keys.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                },
-                {
-                    "key": "object_type",
-                    "label": "Object Type",
-                    "type": "string",
-                    "description": "CRM object type to describe (e.g. Account, Contact).",
-                    "required": true
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "name",
-                    "type": "string",
-                    "description": "API name of the CRM object type."
-                },
-                {
-                    "key": "fields",
-                    "type": "array",
-                    "description": "List of field metadata objects describing each field on the object."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed. Additional provider-specific describe keys are returned as sibling output keys."
-                }
-            ]
-        },
-        {
-            "type": "step.crm_get_limits",
-            "description": "Retrieves current API usage limits and remaining quota from the CRM provider. On success the provider's limits payload is returned as top-level output keys.",
-            "configFields": [
-                {
-                    "key": "module",
-                    "label": "CRM Module",
-                    "type": "string",
-                    "description": "Name of the crm.provider module instance to use.",
-                    "defaultValue": "crm"
-                }
-            ],
-            "outputs": [
-                {
-                    "key": "DailyApiRequests",
-                    "type": "json",
-                    "description": "Object with Max and Remaining counts for daily API request quota (Salesforce standard key; other providers may use different keys)."
-                },
-                {
-                    "key": "error",
-                    "type": "string",
-                    "description": "Error message if the step failed. Additional provider-specific limit keys are returned as sibling output keys."
-                }
-            ]
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step encountered a fatal error."
         }
-    ]
+      ]
+    },
+    {
+      "type": "step.crm_get_record",
+      "description": "Retrieves a single CRM record by object type and record ID. On success the record's fields are returned as top-level output keys.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "object_type",
+          "label": "Object Type",
+          "type": "string",
+          "description": "CRM object type to retrieve (e.g. Account, Contact).",
+          "required": true
+        },
+        {
+          "key": "record_id",
+          "label": "Record ID",
+          "type": "string",
+          "description": "ID of the CRM record to retrieve.",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "Id",
+          "type": "string",
+          "description": "CRM record ID (provider-standard field present on every record)."
+        },
+        {
+          "key": "Name",
+          "type": "string",
+          "description": "CRM record name field (provider-standard field, present on most object types)."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed or the record was not found. Additional provider-specific record fields are returned as sibling output keys."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_update_record",
+      "description": "Updates an existing CRM record with the provided field values.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "object_type",
+          "label": "Object Type",
+          "type": "string",
+          "description": "CRM object type of the record to update.",
+          "required": true
+        },
+        {
+          "key": "record_id",
+          "label": "Record ID",
+          "type": "string",
+          "description": "ID of the CRM record to update.",
+          "required": true
+        },
+        {
+          "key": "fields",
+          "label": "Fields",
+          "type": "json",
+          "description": "Map of field names to updated values."
+        }
+      ],
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "description": "Whether the record was updated successfully."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_upsert_record",
+      "description": "Creates or updates a CRM record matched by an external ID field.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "object_type",
+          "label": "Object Type",
+          "type": "string",
+          "description": "CRM object type to upsert.",
+          "required": true
+        },
+        {
+          "key": "external_id_field",
+          "label": "External ID Field",
+          "type": "string",
+          "description": "API name of the external ID field used to match existing records.",
+          "required": true
+        },
+        {
+          "key": "external_id_value",
+          "label": "External ID Value",
+          "type": "string",
+          "description": "Value of the external ID field used to match existing records.",
+          "required": true
+        },
+        {
+          "key": "fields",
+          "label": "Fields",
+          "type": "json",
+          "description": "Map of field names to values to set on the record."
+        }
+      ],
+      "outputs": [
+        {
+          "key": "id",
+          "type": "string",
+          "description": "ID of the created or updated record."
+        },
+        {
+          "key": "success",
+          "type": "boolean",
+          "description": "Whether the upsert was successful."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_delete_record",
+      "description": "Deletes a CRM record by object type and record ID.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "object_type",
+          "label": "Object Type",
+          "type": "string",
+          "description": "CRM object type of the record to delete.",
+          "required": true
+        },
+        {
+          "key": "record_id",
+          "label": "Record ID",
+          "type": "string",
+          "description": "ID of the CRM record to delete.",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "description": "Whether the record was deleted successfully."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_query",
+      "description": "Executes a structured query (e.g. SOQL for Salesforce) against the CRM and returns matching records.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "query",
+          "label": "Query",
+          "type": "string",
+          "description": "Query string in the provider's query language (e.g. SOQL).",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "records",
+          "type": "array",
+          "description": "List of records returned by the query."
+        },
+        {
+          "key": "total_size",
+          "type": "number",
+          "description": "Total number of records matched by the query."
+        },
+        {
+          "key": "done",
+          "type": "boolean",
+          "description": "Whether all matching records have been returned."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_search",
+      "description": "Executes a free-text search (e.g. SOSL for Salesforce) across CRM objects.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "query",
+          "label": "Search Query",
+          "type": "string",
+          "description": "Search string in the provider's search language (e.g. SOSL FIND clause).",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "results",
+          "type": "array",
+          "description": "List of records returned by the search."
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "description": "Number of records returned."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_bulk_import",
+      "description": "Performs a bulk CRM operation (insert, update, upsert, or delete) on a set of records.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "object_type",
+          "label": "Object Type",
+          "type": "string",
+          "description": "CRM object type to operate on.",
+          "required": true
+        },
+        {
+          "key": "operation",
+          "label": "Operation",
+          "type": "string",
+          "description": "Bulk operation type: insert, update, upsert, or delete.",
+          "defaultValue": "insert"
+        },
+        {
+          "key": "records",
+          "label": "Records",
+          "type": "json",
+          "description": "Array of record field maps to process."
+        }
+      ],
+      "outputs": [
+        {
+          "key": "job_id",
+          "type": "string",
+          "description": "Provider job ID for the bulk operation."
+        },
+        {
+          "key": "state",
+          "type": "string",
+          "description": "Current state of the bulk job."
+        },
+        {
+          "key": "records_processed",
+          "type": "number",
+          "description": "Number of records successfully processed."
+        },
+        {
+          "key": "records_failed",
+          "type": "number",
+          "description": "Number of records that failed to process."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_describe_object",
+      "description": "Returns metadata describing a CRM object type, including its fields and their properties. On success the provider's describe payload is returned as top-level output keys.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        },
+        {
+          "key": "object_type",
+          "label": "Object Type",
+          "type": "string",
+          "description": "CRM object type to describe (e.g. Account, Contact).",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "name",
+          "type": "string",
+          "description": "API name of the CRM object type."
+        },
+        {
+          "key": "fields",
+          "type": "array",
+          "description": "List of field metadata objects describing each field on the object."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed. Additional provider-specific describe keys are returned as sibling output keys."
+        }
+      ]
+    },
+    {
+      "type": "step.crm_get_limits",
+      "description": "Retrieves current API usage limits and remaining quota from the CRM provider. On success the provider's limits payload is returned as top-level output keys.",
+      "configFields": [
+        {
+          "key": "module",
+          "label": "CRM Module",
+          "type": "string",
+          "description": "Name of the crm.provider module instance to use.",
+          "defaultValue": "crm"
+        }
+      ],
+      "outputs": [
+        {
+          "key": "DailyApiRequests",
+          "type": "json",
+          "description": "Object with Max and Remaining counts for daily API request quota (Salesforce standard key; other providers may use different keys)."
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "description": "Error message if the step failed. Additional provider-specific limit keys are returned as sibling output keys."
+        }
+      ]
+    }
+  ]
 }
