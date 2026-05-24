@@ -9,5 +9,5 @@ import (
 )
 
 func main() {
-	sdk.Serve(internal.NewCRMPlugin())
+	sdk.Serve(internal.NewCRMPlugin(), sdk.WithBuildVersion(sdk.ResolveBuildVersion(internal.Version)))
 }
