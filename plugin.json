@@ -1,6 +1,6 @@
 {
     "name": "workflow-plugin-crm",
-    "version": "0.1.4",
+    "version": "0.0.0",
     "description": "Vendor-neutral CRM plugin for the workflow engine (Salesforce adapter)",
     "author": "GoCodeAlone",
     "license": "MIT",
